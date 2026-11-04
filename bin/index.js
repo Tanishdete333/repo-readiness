@@ -3,6 +3,7 @@
 const { fileExists } = require("../src/fileExists");
 const { checks } = require("../src/checks");
 const { readPackage } = require("../src/readPackage");
+const { contributing } = require("../src/templates");
 
 const GREEN = "\x1b[32m";
 const RED = "\x1b[31m";
@@ -40,9 +41,7 @@ if (command === "check") {
     console.log("No package.json found. Run init inside a Node project.");
     process.exit(1);
   }
-    console.log("Name:", pkg.name);
-  console.log("Description:", pkg.description);
-  console.log("Scripts:", pkg.scripts);
+  console.log(contributing(pkg));
   
 } else {
   console.log("Unknown command. Try: repo-readiness check");
