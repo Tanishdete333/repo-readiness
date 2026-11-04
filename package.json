@@ -1,0 +1,13 @@
+{
+  "name": "repo-readiness",
+  "version": "0.1.0",
+  "description": "Check how ready your repo is for contributors, then generate the missing files.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Tanish Dete",
+  "license": "MIT",
+  "type": "commonjs"
+}
