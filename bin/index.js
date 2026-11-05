@@ -4,6 +4,7 @@ const { fileExists } = require("../src/fileExists");
 const { runChecks } = require("../src/score");
 const { readPackage } = require("../src/readPackage");
 const { writeFile } = require("../src/writeFile");
+const { readmeWarnings } = require("../src/readmeWarnings");
 const {
   contributing,
   gitignore,
@@ -16,32 +17,67 @@ const {
   featureRequest,
   ci,
 } = require("../src/templates");
-const { readmeWarnings } = require("../src/readmeWarnings");
 
 const GREEN = "\x1b[32m";
 const RED = "\x1b[31m";
+const YELLOW = "\x1b[33m";
 const RESET = "\x1b[0m";
 const MIN_SCORE = 70;
-const YELLOW = "\x1b[33m";
+
+const HELP = `repo-readiness: check how ready your repo is for contributors
+
+Usage:
+  repo-readiness check [--json]
+  repo-readiness init [--dry-run]
+
+Commands:
+  check     Score your repo and list what is missing
+  init      Create the missing files, tailored to your package.json
+
+Options:
+  --json      (check) print the result as JSON
+  --dry-run   (init) show what would be created without writing files
+  --help      show this message
+`;
 
 const args = process.argv.slice(2);
 const command = args[0];
 
-if (command === "check") {
+if (!command || command === "help" || args.includes("--help")) {
+  console.log(HELP);
+} else if (command === "check") {
+  const asJson = args.includes("--json");
   const { score, results } = runChecks();
+  const warnings = readmeWarnings();
 
-  for (const result of results) {
-    if (result.passed) {
-      console.log(GREEN + "✓" + RESET, result.check.name);
-    } else {
-      console.log(RED + "✗" + RESET, result.check.name, "-", result.check.fix);
+  if (asJson) {
+    const output = {
+      score: score,
+      passed: score >= MIN_SCORE,
+      checks: results.map((result) => {
+        return {
+          id: result.check.id,
+          name: result.check.name,
+          passed: result.passed,
+        };
+      }),
+      warnings: warnings,
+    };
+    console.log(JSON.stringify(output, null, 2));
+  } else {
+    for (const result of results) {
+      if (result.passed) {
+        console.log(GREEN + "✓" + RESET, result.check.name);
+      } else {
+        console.log(RED + "✗" + RESET, result.check.name, "-", result.check.fix);
+      }
     }
-  }
 
-  console.log("\nScore:", score + "/100");
+    console.log("\nScore:", score + "/100");
 
-    for (const warning of readmeWarnings()) {
-    console.log(YELLOW + "!" + RESET, warning);
+    for (const warning of warnings) {
+      console.log(YELLOW + "!" + RESET, warning);
+    }
   }
 
   if (score < MIN_SCORE) {
@@ -57,14 +93,14 @@ if (command === "check") {
   const dryRun = args.includes("--dry-run");
   const before = runChecks().score;
 
-   const files = [
+  const files = [
     { path: "CONTRIBUTING.md", content: contributing(pkg) },
     { path: "SECURITY.md", content: security(pkg) },
     { path: ".gitignore", content: gitignore() },
     { path: ".github/PULL_REQUEST_TEMPLATE.md", content: pullRequestTemplate() },
     { path: "README.md", content: readme(pkg) },
     { path: "LICENSE", content: license(pkg) },
-        { path: "CODE_OF_CONDUCT.md", content: codeOfConduct(pkg) },
+    { path: "CODE_OF_CONDUCT.md", content: codeOfConduct(pkg) },
     { path: ".github/ISSUE_TEMPLATE/bug_report.yml", content: bugReport() },
     { path: ".github/ISSUE_TEMPLATE/feature_request.yml", content: featureRequest() },
     { path: ".github/workflows/ci.yml", content: ci(pkg) },
@@ -86,6 +122,6 @@ if (command === "check") {
     console.log("\nScore:", before, "->", after);
   }
 } else {
-  console.log("Unknown command. Try: repo-readiness check");
+  console.log("Unknown command. Try: repo-readiness --help");
   process.exit(1);
 }
