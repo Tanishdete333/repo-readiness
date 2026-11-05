@@ -4,7 +4,18 @@ const { fileExists } = require("../src/fileExists");
 const { runChecks } = require("../src/score");
 const { readPackage } = require("../src/readPackage");
 const { writeFile } = require("../src/writeFile");
-const { contributing, gitignore, security, pullRequestTemplate, license, readme } = require("../src/templates");
+const {
+  contributing,
+  gitignore,
+  security,
+  pullRequestTemplate,
+  license,
+  readme,
+  codeOfConduct,
+  bugReport,
+  featureRequest,
+  ci,
+} = require("../src/templates");
 
 const GREEN = "\x1b[32m";
 const RED = "\x1b[31m";
@@ -47,6 +58,10 @@ if (command === "check") {
     { path: ".github/PULL_REQUEST_TEMPLATE.md", content: pullRequestTemplate() },
     { path: "README.md", content: readme(pkg) },
     { path: "LICENSE", content: license(pkg) },
+        { path: "CODE_OF_CONDUCT.md", content: codeOfConduct(pkg) },
+    { path: ".github/ISSUE_TEMPLATE/bug_report.yml", content: bugReport() },
+    { path: ".github/ISSUE_TEMPLATE/feature_request.yml", content: featureRequest() },
+    { path: ".github/workflows/ci.yml", content: ci(pkg) },
   ];
 
   for (const file of files) {

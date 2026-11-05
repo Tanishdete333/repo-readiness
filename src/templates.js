@@ -144,4 +144,107 @@ function readme(pkg) {
 
   return lines.join("\n");
 }
-module.exports = { contributing, gitignore, security, pullRequestTemplate, license, readme };
+
+function codeOfConduct(pkg) {
+  const name = pkg.name || "this project";
+  const lines = [
+    "# Code of Conduct",
+    "",
+    `We want ${name} to be a friendly place for everyone.`,
+    "",
+    "## Our standards",
+    "",
+    "- Be respectful and kind.",
+    "- Welcome newcomers and answer questions patiently.",
+    "- Give and accept feedback gracefully.",
+    "- No harassment, insults or discrimination.",
+    "",
+    "## Reporting",
+    "",
+    "If someone is behaving badly, please contact the project maintainers.",
+    "They will review reports and act on them.",
+    "",
+  ];
+  return lines.join("\n");
+}
+
+function bugReport() {
+  return `name: Bug report
+description: Something is not working
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Describe the bug and what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+    validations:
+      required: true
+`;
+}
+
+function featureRequest() {
+  return `name: Feature request
+description: Suggest an idea
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like to see?
+    validations:
+      required: true
+`;
+}
+
+function ci(pkg) {
+  const lines = [
+    "name: CI",
+    "",
+    "on:",
+    "  push:",
+    "    branches: [main]",
+    "  pull_request:",
+    "",
+    "jobs:",
+    "  build:",
+    "    runs-on: ubuntu-latest",
+    "    steps:",
+    "      - uses: actions/checkout@v4",
+    "      - uses: actions/setup-node@v4",
+    "        with:",
+    "          node-version: lts/*",
+    "      - run: npm install",
+  ];
+
+  if (hasRealTest(pkg)) {
+    lines.push("      - run: npm test");
+  }
+
+  lines.push("");
+  return lines.join("\n");
+}
+module.exports = {
+  contributing,
+  gitignore,
+  security,
+  pullRequestTemplate,
+  license,
+  readme,
+  codeOfConduct,
+  bugReport,
+  featureRequest,
+  ci,
+};
