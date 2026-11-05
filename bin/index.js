@@ -4,7 +4,7 @@ const { fileExists } = require("../src/fileExists");
 const { runChecks } = require("../src/score");
 const { readPackage } = require("../src/readPackage");
 const { writeFile } = require("../src/writeFile");
-const { contributing } = require("../src/templates");
+const { contributing, gitignore, security, pullRequestTemplate } = require("../src/templates");
 
 const GREEN = "\x1b[32m";
 const RED = "\x1b[31m";
@@ -40,8 +40,11 @@ if (command === "check") {
   const dryRun = args.includes("--dry-run");
   const before = runChecks().score;
 
-  const files = [
+   const files = [
     { path: "CONTRIBUTING.md", content: contributing(pkg) },
+    { path: "SECURITY.md", content: security(pkg) },
+    { path: ".gitignore", content: gitignore() },
+    { path: ".github/PULL_REQUEST_TEMPLATE.md", content: pullRequestTemplate() },
   ];
 
   for (const file of files) {
