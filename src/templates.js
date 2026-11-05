@@ -78,4 +78,70 @@ function pullRequestTemplate() {
   ];
   return lines.join("\n");
 }
-module.exports = { contributing, gitignore, security, pullRequestTemplate };
+function license(pkg) {
+  const year = new Date().getFullYear();
+  const author =
+    typeof pkg.author === "string" && pkg.author
+      ? pkg.author
+      : "the project authors";
+
+  return `MIT License
+
+Copyright (c) ${year} ${author}
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+`;
+}
+
+function readme(pkg) {
+  const name = pkg.name || "my-project";
+  const description = pkg.description || "Describe what this project does.";
+  const scripts = pkg.scripts || {};
+  const runScript = scripts.dev
+    ? "npm run dev"
+    : scripts.start
+      ? "npm start"
+      : null;
+
+  const lines = [
+    `# ${name}`,
+    "",
+    description,
+    "",
+    "## Install",
+    "",
+    "```bash",
+    "npm install",
+    "```",
+    "",
+  ];
+
+  if (runScript) {
+    lines.push("## Usage", "", "```bash", runScript, "```", "");
+  }
+
+  if (hasRealTest(pkg)) {
+    lines.push("## Tests", "", "```bash", "npm test", "```", "");
+  }
+
+  lines.push("## Contributing", "", "See [CONTRIBUTING.md](CONTRIBUTING.md).", "");
+
+  return lines.join("\n");
+}
+module.exports = { contributing, gitignore, security, pullRequestTemplate, license, readme };

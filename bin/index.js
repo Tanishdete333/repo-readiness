@@ -4,7 +4,7 @@ const { fileExists } = require("../src/fileExists");
 const { runChecks } = require("../src/score");
 const { readPackage } = require("../src/readPackage");
 const { writeFile } = require("../src/writeFile");
-const { contributing, gitignore, security, pullRequestTemplate } = require("../src/templates");
+const { contributing, gitignore, security, pullRequestTemplate, license, readme } = require("../src/templates");
 
 const GREEN = "\x1b[32m";
 const RED = "\x1b[31m";
@@ -45,6 +45,8 @@ if (command === "check") {
     { path: "SECURITY.md", content: security(pkg) },
     { path: ".gitignore", content: gitignore() },
     { path: ".github/PULL_REQUEST_TEMPLATE.md", content: pullRequestTemplate() },
+    { path: "README.md", content: readme(pkg) },
+    { path: "LICENSE", content: license(pkg) },
   ];
 
   for (const file of files) {
