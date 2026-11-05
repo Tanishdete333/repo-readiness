@@ -8,7 +8,7 @@ test("contributing mentions npm test only when a real test script exists", () =>
   const withTest = contributing({ name: "demo", scripts: { test: "jest" } });
   const withoutTest = contributing({ name: "demo", scripts: { test: PLACEHOLDER_TEST } });
 
-  assert.ok(withTest.includes("npm test"));
+      assert.ok(withTest.includes("npm test"));
   assert.ok(!withoutTest.includes("npm test"));
 });
 
