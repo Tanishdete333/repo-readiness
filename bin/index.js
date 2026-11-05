@@ -17,6 +17,7 @@ const {
   featureRequest,
   ci,
 } = require("../src/templates");
+const { gitignoreWarnings } = require("../src/gitignoreWarnings");
 
 const GREEN = "\x1b[32m";
 const RED = "\x1b[31m";
@@ -48,7 +49,7 @@ if (!command || command === "help" || args.includes("--help")) {
 } else if (command === "check") {
   const asJson = args.includes("--json");
   const { score, results } = runChecks();
-  const warnings = readmeWarnings();
+    const warnings = [...readmeWarnings(), ...gitignoreWarnings()];
 
   if (asJson) {
     const output = {
