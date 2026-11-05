@@ -16,11 +16,13 @@ const {
   featureRequest,
   ci,
 } = require("../src/templates");
+const { readmeWarnings } = require("../src/readmeWarnings");
 
 const GREEN = "\x1b[32m";
 const RED = "\x1b[31m";
 const RESET = "\x1b[0m";
 const MIN_SCORE = 70;
+const YELLOW = "\x1b[33m";
 
 const args = process.argv.slice(2);
 const command = args[0];
@@ -37,6 +39,10 @@ if (command === "check") {
   }
 
   console.log("\nScore:", score + "/100");
+
+    for (const warning of readmeWarnings()) {
+    console.log(YELLOW + "!" + RESET, warning);
+  }
 
   if (score < MIN_SCORE) {
     process.exit(1);
