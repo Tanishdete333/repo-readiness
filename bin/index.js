@@ -4,6 +4,7 @@ const { fileExists } = require("../src/fileExists");
 const { checks } = require("../src/checks");
 const { readPackage } = require("../src/readPackage");
 const { contributing } = require("../src/templates");
+const { writeFile } = require("../src/writeFile");
 
 const GREEN = "\x1b[32m";
 const RED = "\x1b[31m";
@@ -41,7 +42,22 @@ if (command === "check") {
     console.log("No package.json found. Run init inside a Node project.");
     process.exit(1);
   }
-  console.log(contributing(pkg));
+    const dryRun = args.includes("--dry-run");
+
+  const files = [
+    { path: "CONTRIBUTING.md", content: contributing(pkg) },
+  ];
+
+  for (const file of files) {
+    if (fileExists(file.path)) {
+      console.log("skipped", file.path, "(already exists)");
+    } else if (dryRun) {
+      console.log("would create", file.path);
+    } else {
+      writeFile(file.path, file.content);
+      console.log("created", file.path);
+    }
+  }
   
 } else {
   console.log("Unknown command. Try: repo-readiness check");
