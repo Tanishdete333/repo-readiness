@@ -2,15 +2,36 @@
   "name": "repo-readiness",
   "version": "0.1.0",
   "description": "Check how ready your repo is for contributors, then generate the missing files.",
-  "main": "index.js",
   "bin": {
-  "repo-readiness": "bin/index.js"
-},
+    "repo-readiness": "bin/index.js"
+  },
+  "files": [
+    "bin",
+    "src"
+  ],
   "scripts": {
-  "test": "node --test"
-},
-  "keywords": [],
+    "test": "node --test"
+  },
+  "keywords": [
+    "github",
+    "open-source",
+    "contributing",
+    "readme",
+    "cli",
+    "repo-health"
+  ],
   "author": "Tanish Dete",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tanishdete333/repo-readiness.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Tanishdete333/repo-readiness/issues"
+  },
+  "homepage": "https://github.com/Tanishdete333/repo-readiness#readme",
+  "engines": {
+    "node": ">=18"
+  },
   "type": "commonjs"
 }
